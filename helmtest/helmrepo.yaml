@@ -4,4 +4,4 @@ metadata:
   name: acrrepo
 spec:
   interval: 10m
-  url: oci://fluxtest.azurecr.io/helm/hello-world:0.1.0
+  url: oci://fluxtest.azurecr.io/helm/hello-world
