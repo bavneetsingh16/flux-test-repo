@@ -1,0 +1,7 @@
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: acrrepo
+spec:
+  interval: 10m
+  url: oci://fluxtest.azurecr.io/helm/hello-world
