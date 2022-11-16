@@ -2,8 +2,10 @@ apiVersion: source.toolkit.fluxcd.io/v1beta2
 kind: HelmRepository
 metadata:
   name: acrrepo
+  namespace: cluster-config
 spec:
   interval: 1m0s
   type: oci
   url: oci://fluxtest.azurecr.io/helm/hello-world
-  provider: azure
+  secretRef:
+    name: ocicred

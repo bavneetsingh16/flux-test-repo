@@ -1,0 +1,13 @@
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmChart
+metadata:
+  name: demo-chart
+  namespace: cluster-config
+spec:
+  interval: 1m0s
+  chart: hello-world
+  reconcileStrategy: ChartVersion
+  sourceRef:
+    kind: HelmRepository
+    name: acrrepo
+  version: '0.1.*'
