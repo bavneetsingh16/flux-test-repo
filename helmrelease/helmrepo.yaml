@@ -7,4 +7,5 @@ spec:
   interval: 1m0s
   type: oci
   url: oci://fluxtest.azurecr.io/helm/timescaledb-single
-  provider: azure
+  secretRef:
+    name: ocicred
