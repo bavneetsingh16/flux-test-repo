@@ -7,4 +7,4 @@ spec:
   values:
     image:
       repository: ghcr.io/stefanprodan/podinfo # {"$imagepolicy": "cluster-config:podinfo:name"}
-      tag: 6.3.1  # {"$imagepolicy": "cluster-config:podinfo:tag"}
+      tag: 6.3.2  # {"$imagepolicy": "cluster-config:podinfo:tag"}
