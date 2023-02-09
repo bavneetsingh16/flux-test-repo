@@ -9,4 +9,4 @@ spec:
     namespace: cluster-config
   policy:
     semver:
-      range: 1.0.x
+      range: 6.3.x
