@@ -2,6 +2,6 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: cluster-config
 resources:
-  - namespace.yaml
-  - configmap.yaml
-  - deployment.yaml
+  - msfttest_demo_kubeconfig_test-namespace.yaml
+  - msfttest_demo_kubeconfig_test-config.yaml
+  - msfttest_demo_kubeconfig_test-deployment.yaml
