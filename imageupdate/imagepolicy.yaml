@@ -1,0 +1,12 @@
+apiVersion: image.toolkit.fluxcd.io/v1beta1
+kind: ImagePolicy
+metadata:
+  name: app1
+  namespace: cluster-config
+spec:
+  imageRepositoryRef:
+    name: podinfo
+    namespace: cluster-config
+  policy:
+    semver:
+      range: 6.3.x

@@ -1,0 +1,12 @@
+apiVersion: image.toolkit.fluxcd.io/v1beta1
+kind: ImageRepository
+metadata:
+  name: podinfo
+  namespace: cluster-config
+spec:
+  interval: 1m
+  image: ghcr.io/stefanprodan/podinfo
+  accessFrom:
+    namespaceSelectors:
+      - matchLabels:
+          kubernetes.io/metadata.name: cluster-config
