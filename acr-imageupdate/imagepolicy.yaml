@@ -7,6 +7,9 @@ spec:
   imageRepositoryRef:
     name: podinfo
     namespace: cluster-config
+  filterTags:
+    extract: $version
+    pattern: ^(?P<version>[0-9]+-[0-9]+)$
   policy:
-    numerical:
+    alphabetical:
       order: asc
