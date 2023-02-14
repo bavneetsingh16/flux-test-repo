@@ -5,7 +5,7 @@ metadata:
   namespace: cluster-config
 spec:
   interval: 1m
-  image: oci://fluxtest.azurecr.io/helm/hello-world
+  image: fluxtest.azurecr.io/helm/hello-world
   secretRef:
     name: acrsecret
   accessFrom:
