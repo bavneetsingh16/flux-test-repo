@@ -8,8 +8,8 @@ spec:
     name: podinfo
     namespace: cluster-config
   filterTags:
-    extract: $version
-    pattern: ^(?P<version>[0-9]+-[0-9]+)$
+    pattern: ^(?P<ts>[0-9]+)-(?P<inc>[0-9]+)$
+    extract: $ts$inc
   policy:
-    alphabetical:
+    numerical:
       order: asc
