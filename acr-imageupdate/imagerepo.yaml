@@ -1,0 +1,14 @@
+apiVersion: image.toolkit.fluxcd.io/v1beta1
+kind: ImageRepository
+metadata:
+  name: podinfo
+  namespace: cluster-config
+spec:
+  interval: 1m
+  image: bstestimage.azurecr.io/helm/hello-world
+  secretRef:
+    name: acrsecret
+  accessFrom:
+    namespaceSelectors:
+      - matchLabels:
+          kubernetes.io/metadata.name: cluster-config
