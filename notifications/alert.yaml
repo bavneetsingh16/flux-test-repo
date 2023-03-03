@@ -1,0 +1,19 @@
+piVersion: notification.toolkit.fluxcd.io/v1beta2
+kind: Alert
+metadata:
+  name: alert-notify
+  namespace: cluster-config
+spec:
+  summary: "Flux events on the cluster"
+  providerRef:
+    name: test-webhook
+  eventSeverity: info
+  eventSources:
+     - kind: Kustomization
+       name: "*"
+     - kind: HelmRelease
+       name: "*"
+     - kind: HelmChart
+       name: "*"
+     - kind: HelmRepository
+       name: "*"
