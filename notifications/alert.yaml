@@ -1,4 +1,4 @@
-piVersion: notification.toolkit.fluxcd.io/v1beta2
+apiVersion: notification.toolkit.fluxcd.io/v1beta2
 kind: Alert
 metadata:
   name: alert-notify
@@ -9,11 +9,7 @@ spec:
     name: test-webhook
   eventSeverity: info
   eventSources:
-     - kind: Kustomization
-       name: "*"
-     - kind: HelmRelease
-       name: "*"
-     - kind: HelmChart
-       name: "*"
-     - kind: HelmRepository
-       name: "*"
+    - kind: GitRepository
+      name: '*'
+    - kind: Kustomization
+      name: '*'
