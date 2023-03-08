@@ -2,5 +2,4 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: cluster-config
 resources:
-  - https://github.com/bavneetsingh16/flux-test-repo/blob/kust_test/basefiles/helmrepo.yaml
   - https://github.com/bavneetsingh16/flux-test-repo/blob/kust_test/basefiles/ns.yaml
