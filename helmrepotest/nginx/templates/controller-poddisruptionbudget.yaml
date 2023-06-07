@@ -1,12 +1,13 @@
-{{- if .Values.pdb.create }}
+{{- if and .Values.pdb.create (eq .Values.kind "Deployment") }}
 apiVersion: {{ include "common.capabilities.policy.apiVersion" . }}
 kind: PodDisruptionBudget
 metadata:
-  name: {{ include "common.names.fullname" . }}
+  name: {{ template "common.names.fullname" . }}
   namespace: {{ include "common.names.namespace" . | quote }}
   labels: {{- include "common.labels.standard" . | nindent 4 }}
+    app.kubernetes.io/component: controller
     {{- if .Values.commonLabels }}
-    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- include "common.tplvalues.render" (dict "value" .Values.commonLabels "context" $) | nindent 4 }}
     {{- end }}
   {{- if .Values.commonAnnotations }}
   annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
@@ -19,5 +20,6 @@ spec:
   maxUnavailable: {{ .Values.pdb.maxUnavailable }}
   {{- end }}
   selector:
-    matchLabels: {{ include "common.labels.matchLabels" . | nindent 6 }}
+    matchLabels: {{- include "common.labels.standard" . | nindent 6 }}
+      app.kubernetes.io/component: controller
 {{- end }}

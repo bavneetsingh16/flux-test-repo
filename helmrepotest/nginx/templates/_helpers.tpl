@@ -1,107 +1,84 @@
 {{/* vim: set filetype=mustache: */}}
+
 {{/*
-Return the proper NGINX image name
+Create a default fully qualified default backend name.
+We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 */}}
-{{- define "nginx.image" -}}
+{{- define "nginx-ingress-controller.defaultBackend.fullname" -}}
+{{- if .Values.fullnameOverride -}}
+{{- printf "%s-default-backend" .Values.fullnameOverride | trunc 63 | trimSuffix "-" -}}
+{{- else -}}
+{{- $name := default .Chart.Name .Values.nameOverride -}}
+{{- if contains $name .Release.Name -}}
+{{- printf "%s-default-backend" .Release.Name | trunc 63 | trimSuffix "-" -}}
+{{- else -}}
+{{- printf "%s-%s-default-backend" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Return the proper nginx-ingress-controller image name
+*/}}
+{{- define "nginx-ingress-controller.image" -}}
 {{ include "common.images.image" (dict "imageRoot" .Values.image "global" .Values.global) }}
 {{- end -}}
 
 {{/*
-Return the proper GIT image name
+Return the proper defaultBackend image name
 */}}
-{{- define "nginx.cloneStaticSiteFromGit.image" -}}
-{{ include "common.images.image" (dict "imageRoot" .Values.cloneStaticSiteFromGit.image "global" .Values.global) }}
-{{- end -}}
-
-{{/*
-Return the proper Prometheus metrics image name
-*/}}
-{{- define "nginx.metrics.image" -}}
-{{ include "common.images.image" (dict "imageRoot" .Values.metrics.image "global" .Values.global) }}
+{{- define "nginx-ingress-controller.defaultBackend.image" -}}
+{{ include "common.images.image" (dict "imageRoot" .Values.defaultBackend.image "global" .Values.global) }}
 {{- end -}}
 
 {{/*
 Return the proper Docker Image Registry Secret Names
 */}}
-{{- define "nginx.imagePullSecrets" -}}
-{{ include "common.images.pullSecrets" (dict "images" (list .Values.image .Values.cloneStaticSiteFromGit.image .Values.metrics.image) "global" .Values.global) }}
+{{- define "nginx-ingress-controller.imagePullSecrets" -}}
+{{- include "common.images.pullSecrets" (dict "images" (list .Values.image .Values.defaultBackend.image) "global" .Values.global) -}}
 {{- end -}}
 
 {{/*
-Return true if a static site should be mounted in the NGINX container
+Construct the path for the publish-service.
+
+By convention this will simply use the <namespace>/<controller-name> to match the name of the
+service generated.
+Users can provide an override for an explicit service they want bound via `.Values.publishService.pathOverride`
+
 */}}
-{{- define "nginx.useStaticSite" -}}
-{{- if or .Values.cloneStaticSiteFromGit.enabled .Values.staticSiteConfigmap .Values.staticSitePVC }}
-    {- true -}}
-{{- end -}}
+{{- define "nginx-ingress-controller.publishServicePath" -}}
+{{- $defServiceName := printf "%s/%s" .Release.Namespace (include "common.names.fullname" .) -}}
+{{- $servicePath := default $defServiceName .Values.publishService.pathOverride }}
+{{- print $servicePath | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
-Return the volume to use to mount the static site in the NGINX container
+Create the name of the service account to use
 */}}
-{{- define "nginx.staticSiteVolume" -}}
-{{- if .Values.cloneStaticSiteFromGit.enabled }}
-emptyDir: {}
-{{- else if .Values.staticSiteConfigmap }}
-configMap:
-  name: {{ printf "%s" (tpl .Values.staticSiteConfigmap $) -}}
-{{- else if .Values.staticSitePVC }}
-persistentVolumeClaim:
-  claimName: {{ printf "%s" (tpl .Values.staticSitePVC $) -}}
-{{- end }}
-{{- end -}}
-
-{{/*
-Return the custom NGINX server block configmap.
-*/}}
-{{- define "nginx.serverBlockConfigmapName" -}}
-{{- if .Values.existingServerBlockConfigmap -}}
-    {{- printf "%s" (tpl .Values.existingServerBlockConfigmap $) -}}
-{{- else -}}
-    {{- printf "%s-server-block" (include "common.names.fullname" .) -}}
-{{- end -}}
-{{- end -}}
-
-{{/*
-Compile all warnings into a single message, and call fail.
-*/}}
-{{- define "nginx.validateValues" -}}
-{{- $messages := list -}}
-{{- $messages := append $messages (include "nginx.validateValues.cloneStaticSiteFromGit" .) -}}
-{{- $messages := append $messages (include "nginx.validateValues.extraVolumes" .) -}}
-{{- $messages := without $messages "" -}}
-{{- $message := join "\n" $messages -}}
-
-{{- if $message -}}
-{{-   printf "\nVALUES VALIDATION:\n%s" $message | fail -}}
-{{- end -}}
-{{- end -}}
-
-{{/* Validate values of NGINX - Clone StaticSite from Git configuration */}}
-{{- define "nginx.validateValues.cloneStaticSiteFromGit" -}}
-{{- if and .Values.cloneStaticSiteFromGit.enabled (or (not .Values.cloneStaticSiteFromGit.repository) (not .Values.cloneStaticSiteFromGit.branch)) -}}
-nginx: cloneStaticSiteFromGit
-    When enabling cloing a static site from a Git repository, both the Git repository and the Git branch must be provided.
-    Please provide them by setting the `cloneStaticSiteFromGit.repository` and `cloneStaticSiteFromGit.branch` parameters.
-{{- end -}}
-{{- end -}}
-
-{{/* Validate values of NGINX - Incorrect extra volume settings */}}
-{{- define "nginx.validateValues.extraVolumes" -}}
-{{- if and (.Values.extraVolumes) (not (or .Values.extraVolumeMounts .Values.cloneStaticSiteFromGit.extraVolumeMounts)) -}}
-nginx: missing-extra-volume-mounts
-    You specified extra volumes but not mount points for them. Please set
-    the extraVolumeMounts value
-{{- end -}}
-{{- end -}}
-
-{{/*
- Create the name of the service account to use
- */}}
-{{- define "nginx.serviceAccountName" -}}
+{{- define "nginx-ingress-controller.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create -}}
     {{ default (include "common.names.fullname" .) .Values.serviceAccount.name }}
 {{- else -}}
     {{ default "default" .Values.serviceAccount.name }}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Return the appropriate apiGroup for PodSecurityPolicy.
+*/}}
+{{- define "nginx-ingress-controller.podSecurityPolicy.apiGroup" -}}
+{{- if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
+{{- print "policy" -}}
+{{- else -}}
+{{- print "extensions" -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Require extensions API group based on Kubernetes version
+*/}}
+{{- define "nginx-ingress-controller.role.extensions.apiGroup" -}}
+{{- if semverCompare "<1.16-0" .Capabilities.KubeVersion.GitVersion -}}
+{{- print "- extensions" -}}
 {{- end -}}
 {{- end -}}

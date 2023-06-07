@@ -5,19 +5,20 @@ metadata:
   name: {{ include "common.names.fullname" . }}
   namespace: {{ default (include "common.names.namespace" .) .Values.metrics.prometheusRule.namespace | quote }}
   labels: {{- include "common.labels.standard" . | nindent 4 }}
-    app.kubernetes.io/component: nginx
-    app.kubernetes.io/component: metrics
-    {{- if .Values.commonLabels }}
-    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
-    {{- end }}
+    app.kubernetes.io/component: controller
     {{- if .Values.metrics.prometheusRule.additionalLabels }}
-    {{- include "common.tplvalues.render" ( dict "value" .Values.metrics.prometheusRule.additionalLabels "context" $ ) | nindent 4 }}
+    {{- include "common.tplvalues.render" (dict "value" .Values.metrics.prometheusRule.additionalLabels "context" $) | nindent 4 }}
+    {{- end }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" (dict "value" .Values.commonLabels "context" $) | nindent 4 }}
     {{- end }}
   {{- if .Values.commonAnnotations }}
   annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
   {{- end }}
 spec:
+  {{- with .Values.metrics.prometheusRule.rules }}
   groups:
-    - name: {{ include "common.names.fullname" . }}
-      rules: {{- include "common.tplvalues.render" ( dict "value" .Values.metrics.prometheusRule.rules "context" $ ) | nindent 6 }}
+    - name: {{ include "common.names.name" $ }}
+      rules: {{- toYaml . | nindent 6 }}
+  {{- end }}
 {{- end }}
