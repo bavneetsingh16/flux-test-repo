@@ -10,12 +10,14 @@ spec:
     spec:
       chart: ./helmrepotest/nginx
       reconcileStrategy: ChartVersion
+      valuesFiles:
+        - ./values.yaml
       sourceRef:
         kind: GitRepository
         name: cluster-config
         namespace: cluster-config
       #version: "9.x"
-  interval: 1m3s
+  interval: 1m5s
   install:
     remediation:
       retries: 3
