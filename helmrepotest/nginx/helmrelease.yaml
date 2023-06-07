@@ -8,7 +8,7 @@ spec:
   releaseName: nginx-ingress-controller
   chart:
     spec:
-      path: ./
+      chart: ./
       sourceRef:
         kind: GitRepository
         name: cluster-config
