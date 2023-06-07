@@ -11,7 +11,7 @@ spec:
       chart: ./helmrepotest/nginx
       reconcileStrategy: ChartVersion
       valuesFiles:
-      - ./values.yaml
+      - ./values-patch.yaml
       sourceRef:
         kind: GitRepository
         name: cluster-config
