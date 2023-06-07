@@ -8,7 +8,7 @@ spec:
   releaseName: nginx-ingress-controller
   chart:
     spec:
-      chart: ./helmrepotest/nginx
+      chart: ./helmrepotest/hello-world
       reconcileStrategy: ChartVersion
       valuesFiles:
       - ./values-patch.yaml
