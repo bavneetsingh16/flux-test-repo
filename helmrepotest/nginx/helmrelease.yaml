@@ -8,7 +8,7 @@ spec:
   releaseName: nginx-ingress-controller
   chart:
     spec:
-      chart: ./
+      chart: ./helmrepotest/nginx
       sourceRef:
         kind: GitRepository
         name: cluster-config
