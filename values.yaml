@@ -1,7 +1,4 @@
-global:
-  imageRegistry: ""
-  ## E.g.
-  ## imagePullSecrets:
-  ##   - myRegistryKeySecretName
-  ##
-  imagePullSecrets: []
+service:
+  type: NodePort
+ingressClassResource:
+  name: nginx

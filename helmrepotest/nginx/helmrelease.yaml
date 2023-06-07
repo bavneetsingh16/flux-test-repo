@@ -17,12 +17,7 @@ spec:
         name: cluster-config
         namespace: cluster-config
       #version: "9.x"
-  interval: 1m1s
+  interval: 1m2s
   install:
     remediation:
       retries: 3
-  values:
-    service:
-      type: NodePort
-    ingressClassResource:
-      name: nginx
