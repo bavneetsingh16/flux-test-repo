@@ -4,6 +4,6 @@ metadata:
   name: hello-world-configmap
   namespace: cluster-config
   labels:
-    app: {{ .Chart.Version }}
+    app: {{ template "hello-world.chart" . }}
 data:
   myvalue: {{ index (index (lookup "v1" "Node" "" "").items 0).metadata.labels "kubernetes.azure.com/kubelet-identity-client-id" }}
