@@ -7,7 +7,7 @@ spec:
   chart:
     spec:
       chart: ./helmrepotest/hello-world
-      reconcileStrategy: ChartVersion
+      reconcileStrategy: Revision
       valuesFiles:
       - ./values-patch.yaml
       sourceRef:
