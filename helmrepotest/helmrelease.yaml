@@ -22,6 +22,11 @@ spec:
               version: v1
               kind: Deployment
               name: hello-world-deployment
+              namespace: cluster-config
+            patch: |
+              - op: add
+                path: /metadata/annotations/helm.toolkit.fluxcd.io~1driftDetection
+                value: enabled
   interval: 1m1s
   install:
     remediation:
