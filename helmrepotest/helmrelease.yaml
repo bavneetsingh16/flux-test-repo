@@ -15,6 +15,13 @@ spec:
         name: cluster-config
         namespace: cluster-config
       #version: "9.x"
+  postRenderers:
+    - kustomize:
+        patches:
+          - target:
+              version: v1
+              kind: Deployment
+              name: hello-world-deployment
   interval: 1m1s
   install:
     remediation:
