@@ -3,13 +3,3 @@ kind: Kustomization
 resources:
   - namespace.yaml
   - helmrelease.yaml
-patches:
-  - patch: |
-      # Enable drift detection feature
-      - op: add
-        path: /spec/template/spec/containers/0/args/-
-        value: --feature-gates=DetectDrift=true
-    target:
-      kind: Deployment
-      name: helm-controller
-      namespace: flux-system
