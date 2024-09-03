@@ -9,11 +9,11 @@ spec:
   chart:
     spec:
       chart: my-chart
-      version: '0.1.0'
+      version: '0.2.0'
       sourceRef:
         kind: HelmRepository
         name: acrrepo
-      interval: 5m
+      interval: 1m
   releaseName: my-chart
   install:
     remediation:
@@ -23,11 +23,8 @@ spec:
       retries: 3
   test:
     enable: true
-  driftDetection:
-    mode: enabled
-    ignore:
-    - paths: ["/spec/replicas"]
-      target:
-        kind: Deployment
   values:
     replicaCount: 1
+    image:
+      repository: nginx
+      tag: latest
