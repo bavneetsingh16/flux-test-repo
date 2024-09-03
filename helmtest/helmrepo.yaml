@@ -1,4 +1,4 @@
-apiVersion: source.toolkit.fluxcd.io/v1beta2
+apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
 metadata:
   name: acrrepo
@@ -6,4 +6,4 @@ metadata:
 spec:
   interval: 1m0s
   type: oci
-  url: oci://bsoci.azurecr.io/helm/my-chart
+  url: oci://bsoci.azurecr.io/helm
