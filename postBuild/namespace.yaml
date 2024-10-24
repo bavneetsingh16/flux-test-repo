@@ -3,5 +3,4 @@ kind: Namespace
 metadata:
   name: apps
   labels:
-    environment: ${cluster_env:=dev}
     region: "${cluster_region}"
