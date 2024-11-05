@@ -24,4 +24,4 @@ spec:
     ingressClassResource:
       name: nginx
     env:
-      MY_ENV_VAR: ${helmvar}
+      HELMVAR: ${helmvar}
