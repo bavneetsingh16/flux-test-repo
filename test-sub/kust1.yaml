@@ -1,0 +1,20 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: monitoring-controllers
+  namespace: cluster-config
+spec:
+  interval: 1m
+  retryInterval: 1m
+  timeout: 5m
+  prune: true
+  wait: true
+  sourceRef:
+    kind: GitRepository
+    name: cluster-config
+  path: ./postBuild
+  postBuild:
+    substituteFrom:
+      - kind: ConfigMap
+        name: testconfig
+        optional: false
