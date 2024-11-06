@@ -1,0 +1,38 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: create-configmap
+  namespace: cluster-config
+spec:
+  interval: 1m
+  retryInterval: 1m
+  timeout: 5m
+  prune: true
+  wait: true
+  sourceRef:
+    kind: GitRepository
+    name: cluster-config
+  path: ./postBuildSubstitution/infra
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: postbuild
+  namespace: cluster-config
+spec:
+  dependsOn:
+    - name: create-configmap
+  interval: 1m
+  retryInterval: 1m
+  timeout: 5m
+  prune: true
+  wait: true
+  sourceRef:
+    kind: GitRepository
+    name: cluster-config
+  path: ./postBuildSubstitution/postBuild
+  postBuild:
+    substituteFrom:
+      - kind: ConfigMap
+        name: testconfig
+        optional: false
