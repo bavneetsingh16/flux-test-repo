@@ -4,4 +4,5 @@ metadata:
   name: store-config
   namespace: cluster-config
 data:
-  helmvar: dev
+  cloud_env: test
+  location_numer: 992342-server

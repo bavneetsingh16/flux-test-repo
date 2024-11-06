@@ -24,4 +24,5 @@ spec:
     ingressClassResource:
       name: nginx
     env:
-      HELMVAR: ${helmvar}
+      cluster: ${location_numer}
+      environment: ${cloud_env}
