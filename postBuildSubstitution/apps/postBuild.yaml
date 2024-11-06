@@ -34,5 +34,5 @@ spec:
   postBuild:
     substituteFrom:
       - kind: ConfigMap
-        name: testconfig
+        name: store-config
         optional: false
